@@ -23,24 +23,103 @@ async def on_message(message):
     print(message.content)
     if message.content.startswith('!exit'):
         await client.close()
+#J33P's stationeers controls
     elif message.content.startswith('!stationeersrestart'):
-        k = paramiko.RSAKey.from_private_key_file("/Users/whatever/Downloads/mykey.pem")
+        k = paramiko.RSAKey.from_private_key_file("/usr/src/app/private.pem")
         c = paramiko.SSHClient()
         c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         print("connecting")
-        c.connect(hostname = "192.168.0.119", username = "thurdi", pkey = k)
+        c.connect(hostname = config.docker_ip, username = config.docker_username, pkey = k)
         print("connected")
-        commands = [ "/home/thurdi/stat_restart.sh"]
+        commands = [ "sudo /home/thurdi/stat_control_jeep.sh -o restart" ]
         for command in commands:
             print("Executing {0}".format( command ))
             stdin , stdout, stderr = c.exec_command(command)
             print(stdout.read())
-            print("Errors")
-            print(stderr.read())
         c.close()
-        
         user = message.author.name
         response = user + " has initiated a server restart"
+        await client.send_message(message.channel, response)
+    elif message.content.startswith('!stationeersstart'):
+        k = paramiko.RSAKey.from_private_key_file("/usr/src/app/private.pem")
+        c = paramiko.SSHClient()
+        c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        print("connecting")
+        c.connect(hostname = config.docker_ip, username = config.docker_username, pkey = k)
+        print("connected")
+        commands = [ "sudo /home/thurdi/stat_control_jeep.sh -o start" ]
+        for command in commands:
+            print("Executing {0}".format( command ))
+            stdin , stdout, stderr = c.exec_command(command)
+            print(stdout.read())
+        c.close()
+        user = message.author.name
+        response = user + " has started the server."
+        await client.send_message(message.channel, response)
+    elif message.content.startswith('!stationeersstop'):
+        k = paramiko.RSAKey.from_private_key_file("/usr/src/app/private.pem")
+        c = paramiko.SSHClient()
+        c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        print("connecting")
+        c.connect(hostname = config.docker_ip, username = config.docker_username, pkey = k)
+        print("connected")
+        commands = [ "sudo /home/thurdi/stat_control_jeep.sh -o stop" ]
+        for command in commands:
+            print("Executing {0}".format( command ))
+            stdin , stdout, stderr = c.exec_command(command)
+            print(stdout.read())
+        c.close()
+        user = message.author.name
+        response = user + " has stopped the server."
+        await client.send_message(message.channel, response)
+#BeardSyndicate's eco controls
+    elif message.content.startswith('!ecorestart'):
+        k = paramiko.RSAKey.from_private_key_file("/usr/src/app/private.pem")
+        c = paramiko.SSHClient()
+        c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        print("connecting")
+        c.connect(hostname = config.eco_ip, username = config.eco_username, pkey = k)
+        print("connected")
+        commands = [ "sudo /home/eco/eco_control.sh -o restart" ]
+        for command in commands:
+            print("Executing {0}".format( command ))
+            stdin , stdout, stderr = c.exec_command(command)
+            print(stdout.read())
+        c.close()
+        user = message.author.name
+        response = user + " has initiated a server restart"
+        await client.send_message(message.channel, response)
+    elif message.content.startswith('!ecostart'):
+        k = paramiko.RSAKey.from_private_key_file("/usr/src/app/private.pem")
+        c = paramiko.SSHClient()
+        c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        print("connecting")
+        c.connect(hostname = config.eco_ip, username = config.eco_username, pkey = k)
+        print("connected")
+        commands = [ "sudo /home/eco/eco_control.sh -o start" ]
+        for command in commands:
+            print("Executing {0}".format( command ))
+            stdin , stdout, stderr = c.exec_command(command)
+            print(stdout.read())
+        c.close()
+        user = message.author.name
+        response = user + " has started the server."
+        await client.send_message(message.channel, response)
+    elif message.content.startswith('!ecostop'):
+        k = paramiko.RSAKey.from_private_key_file("/usr/src/app/private.pem")
+        c = paramiko.SSHClient()
+        c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        print("connecting")
+        c.connect(hostname = config.eco_ip, username = config.eco_username, pkey = k)
+        print("connected")
+        commands = [ "sudo /home/eco/eco_control.sh -o stop" ]
+        for command in commands:
+            print("Executing {0}".format( command ))
+            stdin , stdout, stderr = c.exec_command(command)
+            print(stdout.read())
+        c.close()
+        user = message.author.name
+        response = user + " has stopped the server."
         await client.send_message(message.channel, response)
     else:
         translator = Translator()
